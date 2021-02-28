@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {                   
+    "target": "ESNext",     // 将ts转换为目标源文件                        
+    "module": "commonjs",  // 模块规范
+    "strictNullChecks": true, // 开启严格检查Null 
+    "lib": ["ESNext", "DOM"] 
+  }
+}
