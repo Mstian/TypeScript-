@@ -83,3 +83,42 @@ function gree():void {
 
 // let a1: bigint;
 // let b1: number;
+
+// let a: string = '1';
+
+// 联合类型
+// let name1: string | number;
+// // console.log(name1!.toString());
+// name1 = 12;
+// console.log(name1.toFixed(2));
+// name1 = "name1";
+// console.log(name1.toUpperCase());
+// console.log(name1.length);
+
+// 类型断言
+let name2:string | number;
+console.log((name2! as number).toFixed());
+
+// 双重断言
+console.log((name2! as any as boolean) = true);
+
+// 字面量类型 和 类型自面量。
+
+type up = "UP";
+
+type down = "DOWN";
+
+type left = "LEFT";
+
+type right = "RIGHT";
+
+
+type Direction = up | down | left | right;
+
+function point(dir: Direction) {
+
+}
+
+point("DOWN");
+
+
