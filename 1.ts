@@ -99,26 +99,69 @@ function gree():void {
 let name2:string | number;
 console.log((name2! as number).toFixed());
 
-// 双重断言
-console.log((name2! as any as boolean) = true);
+// // 双重断言
+// console.log((name2! as any as boolean) = true);
 
-// 字面量类型 和 类型自面量。
+// // 字面量类型 和 类型自面量。
 
-type up = "UP";
+// type up = "UP";
 
-type down = "DOWN";
+// type down = "DOWN";
 
-type left = "LEFT";
+// type left = "LEFT";
 
-type right = "RIGHT";
+// type right = "RIGHT";
 
 
-type Direction = up | down | left | right;
+// type Direction = up | down | left | right;
 
-function point(dir: Direction) {
+// function point(dir: Direction) {
 
+// }
+
+// point("DOWN");
+
+
+
+// interface Speakable{
+//     speak():void
+// }
+
+// interface Eatable{
+//     eat():void
+// }
+
+// class Person implements Speakable, Eatable{
+//     speak(){
+//         console.log('speak');
+//     }
+// }
+// interface Person {
+//     name: string,
+//     speak(words:string):void
+// }
+// class Man implements Person{
+//     name:string = "lucy";
+//     speak(words:string){
+//         console.log(words);
+//     }
+//     eat() {
+        
+//     }
+// }
+
+
+
+class Animal{
+    constructor(public name:string){}
 }
-
-point("DOWN");
-
+//不加new是修饰函数的,加new是修饰类的
+interface WithNameClass{
+    new(name:string):Animal
+}
+function createAnimal(clazz:WithNameClass,name:string){
+    return new clazz(name);
+}
+let a = createAnimal(Animal,'zhufeng');
+console.log(a.name);
 
