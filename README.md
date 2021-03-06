@@ -536,6 +536,52 @@ console.log(a.name); // lucy
 // 抽象类也可以实现接口
 ```
 
+22. 泛型
+
+指在定义函数，接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性
+
+泛型的作用域只限于函数内部使用
+
+```typescript
+// 1. 泛型函数
+function CreateArray<T>(length: number, value: T):T[] {
+    let result:T[] = [];
+    for(let i = 0; i < length; i++) {
+        result[i] = value;
+    }
+    return result;
+}
+console.log(CreateArray<string>(10, 1)); 
+
+// 2. 泛型类
+class CustomArray<T>{
+    private list:Array<T> = [];
+    add(value: T) {
+        this.list.push(value);
+    }
+    getMax():T {
+        let res = this.list[0];
+        for(let i = 0; i < this.list.length; i++) {
+            if(res < this.list[i]) {
+                res = this.list[i];
+            }
+        }
+        return res;
+    }
+}
+
+let custom = new CustomArray<number>();
+custom.add(1);
+custom.add(2);
+custom.add(3);
+console.log(custom.getMax());
+
+```
+
+
+
+
+
 
 
 > [了不起的 tsconfig.json 指南](https://zhuanlan.zhihu.com/p/145210784)
