@@ -198,27 +198,133 @@
 
 // 泛型类
 
-class CustomArray<T>{
-    private list:Array<T> = [];
-    add(value: T) {
-        this.list.push(value);
-    }
-    getMax():T {
-        let res = this.list[0];
-        for(let i = 0; i < this.list.length; i++) {
-            if(res < this.list[i]) {
-                res = this.list[i];
-            }
-        }
-        return res;
-    }
-}
+// class CustomArray<T>{
+//     private list:Array<T> = [];
+//     add(value: T) {
+//         this.list.push(value);
+//     }
+//     getMax():T {
+//         let res = this.list[0];
+//         for(let i = 0; i < this.list.length; i++) {
+//             if(res < this.list[i]) {
+//                 res = this.list[i];
+//             }
+//         }
+//         return res;
+//     }
+// }
 
-let custom = new CustomArray<number>();
 
-custom.add(1);
-custom.add(2);
-custom.add(3);
+// function createInstance<A>(c: new () => A): A {
+//     return new c();
+// }
+// createInstance(CustomArray);
 
-console.log(custom.getMax());
+// custom.add(1);
+
+
+// class BeeKeeper {
+//     hasMask: boolean;
+// }
+
+// class ZooKeeper {
+//     nametag: string;
+// }
+
+// class Animal {
+//     numLegs: number;
+// }
+
+// class Bee extends Animal {
+//     keeper: BeeKeeper;
+// }
+
+// class Lion extends Animal {
+//     keeper: ZooKeeper;
+// }
+
+// function createInstance<A>(c: new () => A): A {
+//     return new c();
+// }
+
+// createInstance(Lion);  // typechecks!
+// createInstance(Bee);   // typechecks!
+
+// 泛型接口
+
+
+// // 1. 需要在函数调用时传递类型
+// interface Caculate{
+//     <T>(a:T,b:T):T
+// }
+
+// let add: Caculate = function<T>(a:T,b:T) {
+//     return a;
+// }
+// add<number>(1,2);
+
+// // 2. 需要在函数定义时传递类型
+// interface Caculate2<T>{
+//     (a:T,b:T):T
+// }
+
+// let add2: Caculate2<string> = function(a:string,b:string) {
+//     return a;
+// }
+// add2('1', '2');
+
+// // 多个类型参数
+// function swap<A,B>(tuple: [A,B]):[B,A] {
+//     return [tuple[1], tuple[0]];
+// }
+
+
+// let swaped = swap<string, number>(['1', 2]);
+
+// console.log(swaped)
+
+// 默认泛型类型
+
+// function createArray<T=number>(length:number, value: T):Array<T> {
+//     let res: Array<T> = [];
+//     for(let i = 0; i < length; i++) {
+//         res[i] = value;
+//     }
+//     return res;
+// }
+
+// console.log(createArray(3, '1'));
+
+// 泛型约束
+
+// function logger<T>(val: T) {
+//     console.log(val.length);
+// }
+
+// interface LengthWise{
+//     length: number
+// }
+
+// function logger2<T extends LengthWise>(val: T) {
+//     console.log(val.length);
+// }
+
+
+// 泛型接口
+// 定义泛型的时候也可以指定接口
+
+// interface Animal<T>{
+//     list: T[]
+// }
+
+// let dog: Animal<{name: string, age: number}> = {
+//     list: [{name: 'erha', age: 2}]
+// }
+
+// dog.list[0].age;
+
+// 泛型类型别名
+type Cart<T> = {list: T[]} | T[];
+let cart1: Cart<string> = {list: ['0']}
+let cart2: Cart<number> = [12]
 

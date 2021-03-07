@@ -576,6 +576,139 @@ custom.add(2);
 custom.add(3);
 console.log(custom.getMax());
 
+// 3. 泛型与new
+function create<T>(c: {new(): T; }): T {
+    return new c();
+}
+// 4. 泛型接口
+// 4.1. 需要在函数调用时传递类型
+interface Caculate{
+    <T>(a:T,b:T):T
+}
+
+let add: Caculate = function<T>(a:T,b:T) {
+    return a;
+}
+add<number>(1,2);
+
+// 4.2. 需要在函数定义时传递类型
+interface Caculate2<T>{
+    (a:T,b:T):T
+}
+
+let add2: Caculate2<string> = function(a:string,b:string) {
+    return a;
+}
+add2('1', '2');
+
+// 5. 多个泛型类型
+// 多个类型参数
+function swap<A,B>(tuple: [A,B]):[B,A] {
+    return [tuple[1], tuple[0]];
+}
+let swaped = swap<string, number>(['1', 2]);
+console.log(swaped)
+
+// 6. 默认泛型类型
+function createArray<T=number>(length:number, value: T):Array<T> {
+    let res: Array<T> = [];
+    for(let i = 0; i < length; i++) {
+        res[i] = value;
+    }
+    return res;
+}
+console.log(createArray(3, '1'));
+
+// 7. 泛型约束
+// 在函数中使用泛型，由于事先不能知道泛型的类型，所以不能随意访问相应类型的属性和方法
+
+function logger<T>(val: T) {
+    console.log(val.length); // 报错 类型“T”上不存在属性“length”
+}
+
+interface LengthWise{
+    length: number
+}
+
+function logger2<T extends LengthWise>(val: T) {
+    console.log(val.length);
+}
+
+// 8. 泛型接口
+// 定义泛型的时候也可以指定接口
+
+interface Animal<T>{
+    list: T[]
+}
+
+let dog: Animal<{name: string, age: number}> = {
+    list: [{name: 'erha', age: 2}]
+}
+
+dog.list[0].age;
+
+// 9.泛型类型别名
+type Cart<T> = {list: T[]} | T[];
+let cart1: Cart<string> = {list: ['0']}
+let cart2: Cart<number> = [12]
+
+// 10. compose函数的类型别名，函数重载，泛型的例子
+type Func<T extends any[], R> = (...a: T) => R
+// 没有参数的情况
+export default function compose(): <R>(a: R) => R
+// 只有一个参数的情况
+export default function compose<F extends Function>(f: F): F
+
+/* two functions */
+export default function compose<A, T extends any[], R>(
+  f1: (a: A) => R,
+  f2: Func<T, A>
+): Func<T, R>
+
+/* three functions */
+export default function compose<A, B, T extends any[], R>(
+  f1: (b: B) => R,
+  f2: (a: A) => B,
+  f3: Func<T, A>
+): Func<T, R>
+
+/* four functions */
+export default function compose<A, B, C, T extends any[], R>(
+  f1: (c: C) => R,
+  f2: (b: B) => C,
+  f3: (a: A) => B,
+  f4: Func<T, A>
+): Func<T, R>
+
+/* rest */
+export default function compose<R>(
+  f1: (a: any) => R,
+  ...funcs: Function[]
+): (...args: any[]) => R
+
+export default function compose<R>(...funcs: Function[]): (...args: any[]) => R
+
+export default function compose(...funcs: Function[]) {
+  if (funcs.length === 0) {
+    // infer the argument type so it is usable in inference down the line
+    return <T>(arg: T) => arg
+  }
+
+  if (funcs.length === 1) {
+    return funcs[0]
+  }
+
+  return funcs.reduce((a, b) => (...args: any) => a(b(...args)))
+}
+
+// 11.泛型接口VS泛型类型别名
+
+    /*
+    1. 接口创建了一个新的名字,可以在其他任意地方被调用，而类型别名并不创建新的名字。
+    2. 类型别名不能被extends和implements,这时尽量使用接口代替类型别名
+    3. 当需要使用联合类型或者元组类型的时候，类型别名会更合适。
+    */
+
 ```
 
 
