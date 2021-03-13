@@ -1,6 +1,3 @@
-##### TypeScript学习记录
-
-##### TypeScript中需要注意的点
 1. 数组类型声明的两种方式
 
 ```typescript
@@ -711,7 +708,203 @@ export default function compose(...funcs: Function[]) {
 
 ```
 
+12. 接口的兼容性
 
+```typescript
+// 如果传入的变量和类型不匹配，TS就会进行兼容性检查
+// 原理是Duck-Check，就是说只要目标类型中声明的属性变量在源类型系统中就是兼容的
+
+interface Animal {
+    name: string,
+    age: number
+}
+
+function getName(animal:Animal):string {
+    return animal.name;
+}
+
+let a = {
+    name: 'dog',
+    age: 2,
+    gender: 0
+}
+
+getName(a);
+
+// 其中Animal接口是目标类型， 对象a是源类型 源类型中有目标类型中的name和age属性，因此是兼容的。
+
+// 只有在传参的时候两个变量之间才会进行兼容性的比较，赋值的时候并不会比较，会直接报错。
+
+let a:Animal = {
+    name:'cat',
+    age: 1,
+    gender: 0 // 对象文字可以只指定已知属性，并且“gender”不在类型“Animal”中。
+}
+```
+
+13. 基本类型的兼容性
+
+```typescript
+// 基本类型数据也有兼容性判断
+let num: string | number;
+let str:stirng = "lucy";
+// num = str; // 不报错
+// str = num; // 会报错
+let num2:{
+    toString():string
+}
+
+let str2:string = "lily";
+num2 = str2;
+
+```
+
+14. 类的兼容性
+
+```typescript
+// 在ts中是结构类型系统，只会对比结构，而不在意类型
+class Animal{
+    name:string
+}
+
+class Bird extends Animal{
+    swing: number
+}
+
+let a: Animal;
+a = new Bird();
+
+let b: Bird;
+b = new Animal(); // 报错：类型 "Animal" 中缺少属性 "swing"，但类型 "Bird" 中需要该属性。
+```
+
+15. 函数的兼容性（参数可少不多，返回值可多不可少）
+
+```typescript
+// 比较函数的时候是要先比较函数的参数，再比较函数的返回值
+
+// 1. 比较参数
+type sumFunc = (a:number, b:number) => number;
+
+let sum1: sumFunc;
+function f1(a:number, b:number):number {
+    return a + b;
+}
+sum1 = f1; // 正确
+
+function f2(a:number):number{
+    return a;
+}
+sum1 = f2; // 正确
+
+function f3(){
+    return 0;
+}
+sum1 = f3; // 正确
+
+function f4(a:number, b:number, c:number, d:number) {
+    return 0
+}
+sum1 = f4; // 不能将类型“(a: number, b: number, c: number, d: number) => number”分配给类型“sumFunc”
+
+// 参数可少不可多
+
+
+// 2. 比较返回值
+type Func = () => {name:string, age:number};
+
+let getPerosn: Func;
+function foo1() {
+    return {
+        name:'a',
+        age: 12
+    }
+}
+getPerosn = foo1;
+
+function foo2() {
+    return {
+        name: 'b',
+        age: 12,
+        gender: 1
+    }
+}
+getPerosn = foo2;
+
+function foo3() {
+    return {
+        name: 'c'
+    }
+}
+
+getPerosn = foo3; // 类型 "{ name: string; }" 中缺少属性 "age"，但类型 "{ name: string; age: number; }" 中需要该属性。
+
+// 返回值可多不可少
+```
+
+16. 函数的协变与逆变（这块暂时不理解，先记录下来）
+
+```typescript
+/*
+协变（Covariant）：只在同一个方向
+逆变（Contravariant）：只在相反的方向
+双向协变（Bivariant）：包括同一个方向和不同方向
+不变（Invariant）：如果类型不完全相同，则他们是不兼容的
+*/
+
+/*
+A <= B 意味着A是B的子类型
+A -> B 指的是以A为参数类型，以B为返回值类型的函数类型
+x: A 意味着x的类型为A
+返回值类型是协变的，而参数类型是逆变的
+返回值类型可以传子类，参数可以传父类
+参数逆变父类，返回值协变子类
+*/
+
+```
+
+17. 泛型的兼容性
+
+```typescript
+// 泛型在判断兼容性的时候会先判断具体的类型，然后再进行兼容性判断
+// 接口内容为空兼容
+interface Empty<T>{}
+
+let x: Empty<string> = '12';
+let y: Empty<number> = 12;
+x = y;
+
+// 接口内容不为空不兼容
+interface NotEmpty<T>{
+    data: T
+}
+let a: NotEmpty<string> = {
+    data: '1'
+};
+let b: NotEmpty<number> = {
+    data: 1
+};
+a = b; // 不能将类型“NotEmpty<number>”分配给类型“NotEmpty<string>”。不能将类型“number”分配给类型“string”
+
+```
+
+18. 枚举的兼容性
+
+```typescript
+// 枚举类型与数字类型兼容，并且数字类型与枚举类型兼容
+// 不同枚举类型之间是不兼容的
+
+enum Colors {Red, Yellow};
+let c:Colors;
+c = Colors.Red;
+
+c = 1;
+// c = '1'; // 不能将类型“"1"”分配给类型“Colors”。ts(2322)
+
+let n:number;
+n = 1;
+n = Colors.Red;
+```
 
 
 

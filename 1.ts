@@ -310,6 +310,7 @@
 // }
 
 
+
 // 泛型接口
 // 定义泛型的时候也可以指定接口
 
@@ -324,7 +325,174 @@
 // dog.list[0].age;
 
 // 泛型类型别名
-type Cart<T> = {list: T[]} | T[];
-let cart1: Cart<string> = {list: ['0']}
-let cart2: Cart<number> = [12]
+// type Cart<T> = {list: T[]} | T[];
+// let cart1: Cart<string> = {list: ['0']}
+// let cart2: Cart<number> = [12]
+
+
+// interface Animal {
+//     name: string,
+//     age: number
+// }
+
+// interface Person{
+//     name: string,
+//     age: number,
+//     gender: number
+// }
+
+// function getName(animal: Animal):string {
+//     return animal.name;
+// }
+
+// let p = {
+//     name: 'lucy',
+//     age: 18,
+//     gender: 0
+// }
+
+// getName(p);
+
+
+// let a: Animal = {
+//     name: 'lucy',
+//     age: 18,
+//     gender: 1
+// }
+
+
+// let num: string | number;
+// let str: string = "lucy";
+// num = str;
+
+// str = num;
+
+// let num2: {
+//     toString():string
+// }
+
+
+// let str2:string = "lily";
+// num2 = str2;
+// str2 = num2;
+
+
+
+// class Animal{
+//     name:string
+// }
+
+// class Bird extends Animal{
+//     swing: number
+// }
+
+// let a: Animal;
+// a = new Bird();
+
+// let b: Bird;
+// b = new Animal(); // 报错：类型 "Animal" 中缺少属性 "swing"，但类型 "Bird" 中需要该属性。
+
+
+// class Animal{
+//     name:string
+// }
+
+// class Bird{
+//     name:number
+// }
+
+// let a:Animal;
+// a = new Bird();
+
+
+// 函数的兼容性
+
+// type sumFunc = (a:number, b:number) => number;
+
+// let sum1: sumFunc;
+// function f1(a:number, b:number):number {
+//     return a + b;
+// }
+// sum1 = f1;
+
+// function f2(a:number):number{
+//     return a;
+// }
+// sum1 = f2;
+
+// function f3(){
+//     return 0;
+// }
+
+// sum1 = f3;
+
+// function f4(a:number, b:number, c:number, d:number) {
+//     return 0
+// }
+// sum1 = f4; // 不能将类型“(a: number, b: number, c: number, d: number) => number”分配给类型“sumFunc”
+
+// type Func = () => {name:string, age:number};
+
+// let getPerosn: Func;
+// function foo1() {
+//     return {
+//         name:'a',
+//         age: 12
+//     }
+// }
+// getPerosn = foo1;
+
+// function foo2() {
+//     return {
+//         name: 'b',
+//         age: 12,
+//         gender: 1
+//     }
+// }
+// getPerosn = foo2;
+
+
+// function foo3() {
+//     return {
+//         name: 'c'
+//     }
+// }
+
+// getPerosn = foo3; // 类型 "{ name: string; }" 中缺少属性 "age"，但类型 "{ name: string; age: number; }" 中需要该属性。
+
+// // 接口内容为空兼容
+// interface Empty<T>{}
+
+// let x: Empty<string> = '12';
+// let y: Empty<number> = 12;
+
+// x = y;
+
+// // 接口内容不为空不兼容
+// interface NotEmpty<T>{
+//     data: T
+// }
+
+// let a: NotEmpty<string> = {
+//     data: '1'
+// };
+// let b: NotEmpty<number> = {
+//     data: 1
+// };
+
+// a = b; // 不能将类型“NotEmpty<number>”分配给类型“NotEmpty<string>”。不能将类型“number”分配给类型“string”
+
+
+
+enum Colors {Red, Yellow};
+let c:Colors;
+c = Colors.Red;
+
+c = 1;
+// c = '1'; // 不能将类型“"1"”分配给类型“Colors”。ts(2322)
+
+let n:number;
+n = 1;
+n = Colors.Red;
+
 
