@@ -906,6 +906,39 @@ n = 1;
 n = Colors.Red;
 ```
 
+19. 类型保护之`typeof`
+
+```typescript
+// 类型保护就是一些表达式，他们在编译的时候就能通过类型信息确定某个作用域内变量的类型
+// 类型保护就是能通过关键字判断出分支的类型
+function double(input: string | number) {
+    if(typeof input === 'string') {
+     	return input + input;  
+    } else if(typeof input === 'number') {
+        return input * 2;
+    }
+}
+```
+
+20. 类型保护之`instanceof`
+
+```typescript
+class Animal{
+    name!:string
+}
+class Birds extends Animal{
+    swing!:number
+}
+
+function getName(animal:Animal) {
+    if(animal instanceof Bird) {
+       console.log(animal.swing);
+    }else{
+        console.log(animal.name);
+    }
+}
+```
+
 
 
 
