@@ -939,6 +939,184 @@ function getName(animal:Animal) {
 }
 ```
 
+21. 类型保护之`null`
+
+```typescript
+// 关于null的类型保护 1. 可以加一层null的判断 2. 可以增加一个或处理
+function getFirstLetter(s: string | null) {
+    if(s === null) {
+        return "";
+    }
+    // s = s || "";
+    // return s.charAt(0);
+}
+
+console.log(getFirstLetter(null)); 
+```
+
+22. 可辨识的联合类型
+
+```typescript
+interface Warning{
+    class: 'warning',
+    text: '警告'
+}
+
+interface Danger{
+    class: 'danger',
+    text: '危险'
+}
+
+type Button = Warning | Danger;
+
+function getButton(button: Button) {
+    if(button.class === 'warning') {
+        console.log(button.text); // 警告
+    }
+    if(button.class === 'danger') {
+        console.log(button.text); // 危险
+    }
+}
+```
+
+23. 类型字面量+可辨识联合类型
+
+```typescript
+interface User{
+    username: string
+}
+
+type Action = {
+    type: 'add',
+    payload: User
+} | {
+    type: 'delete',
+    payload: number
+};
+
+const UserReducer = (action: Action) => {
+    switch(action.type) {
+        case 'add':
+            let user: User = action.payload;
+            break;
+        case 'delete':
+            let id:number = action.payload;
+            break;
+        default:
+            break;
+    }
+}
+```
+
+24. in操作符
+
+```typescript
+interface Bird{
+    swing: number
+}
+
+interface Dog{
+    leg: number
+}
+
+function getNumber(x:Bird | Dog){
+    if("swing" in x) {
+        return x.swing;
+    }
+    return x.leg;
+}
+```
+
+25. 自定义类型保护
+
+```typescript
+// type is Type1Class是类型谓词
+// 谓词为 parameterName is Type形式，parameter必须是来自于当前函数签名里的一个参数名。
+// 每当使用一些变量调用isType1时，如果原始类型兼容，TypeScript会将该变量缩小到特定类型
+
+function isType1(type: Type1Class|Type2Class): type is Type1Class{
+    return (<Type1Class>type).func1 !== undefined;
+}
+
+interface Bird{
+    swing: number;
+}
+
+interface Dog{
+    leg: number
+}
+
+function isBird(x: Bird|Dog): x is Bird {
+    return (<Bird>x).swing === 2;
+}
+
+function getAnimal(x:Bird | Dog){
+    if(isBird(x)) {
+        return x.swing;
+    }
+    return x.leg;
+}
+
+console.log(getAnimal({swing: 2})); 
+```
+
+26. unknown 与 any
+
+```typescript
+// 区别：unknown和any的主要区别是unknown类型会更加严格；在对unknown 类型的值执行大多数操作之前，我们必须进行某种形式的检查，而对any类型的值执行操作之前，我们不必进行任何检查。
+
+// any为类型系统的顶级类型（也被称为 全局超级类型）
+
+// TS允许对any类型值执行任何操作，无需事先执行任何形式的检查。
+
+// 所有的类型都可以被归为any，所有类型也都可以被归为unknown,因此unknown称为TS系统的另一种顶级类型。
+
+// 任何类型都可以赋值给unknown类型
+
+// unknown类型只能被赋值给any类型和unknown类型本身。
+
+// 如果没有类型断言或类型细化，不能在unknown上面进行任何操作
+// 可以对unknown类型使用类型断言
+const value: unknown = "hello";
+const some: string = value as string
+
+// 联合类型中的unknown类型
+
+// 在联合类型中，unknown类型会吸收任何类型。这就意味着如果任一组成类型是unknown,联合类型也会相当于unknown.
+
+type UnionType = unknown | string; // unknown
+
+// 交叉类型中的unknown类型
+
+// 在交叉类型中，任何类型都可以吸收unknown类型。这就意味着将任何类型与unknown相交都不会改变结果类型。
+
+type Intersection = unknown & string; // string
+
+// never是unknown的子类型
+type isNever = never extends unknown ? true : false;
+
+// keyof unknown 等于never
+type key = keyof unknown;
+
+// unknown类型不能进行运算操作，不能访问属性，不能作为函数使用，不能当做类的构造函数不能创建实例。
+
+// 映射属性 如果映射类型遍历的时候是unknown，不会映射属性
+
+type getType<T> = {
+    [p in keyof T]:number
+}
+type t = getType<unknown>;
+
+```
+
+
+
+
+
+
+
+
+
 
 
 

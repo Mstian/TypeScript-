@@ -484,15 +484,124 @@
 
 
 
-enum Colors {Red, Yellow};
-let c:Colors;
-c = Colors.Red;
+// enum Colors {Red, Yellow};
+// let c:Colors;
+// c = Colors.Red;
 
-c = 1;
-// c = '1'; // 不能将类型“"1"”分配给类型“Colors”。ts(2322)
+// c = 1;
+// // c = '1'; // 不能将类型“"1"”分配给类型“Colors”。ts(2322)
 
-let n:number;
-n = 1;
-n = Colors.Red;
+// let n:number;
+// n = 1;
+// n = Colors.Red;
 
 
+
+// function getFirstLetter(s: string | null) {
+//     if(s === null) {
+//         return "";
+//     }
+//     // s = s || "";
+//     // return s.charAt(0);
+// }
+
+// console.log(getFirstLetter(null)); 
+
+
+// interface Warning{
+//     class: 'warning',
+//     text: '警告'
+// }
+
+// interface Danger{
+//     class: 'danger',
+//     text: '危险'
+// }
+
+// type Button = Warning | Danger;
+
+// function getButton(button: Button) {
+//     if(button.class === 'warning') {
+//         console.log(button.text); // 警告
+//     }
+//     if(button.class === 'danger') {
+//         console.log(button.text); // 危险
+//     }
+// }
+
+
+// interface User{
+//     username: string
+// }
+
+// type Action = {
+//     type: 'add',
+//     payload: User
+// } | {
+//     type: 'delete',
+//     payload: number
+// };
+
+// const UserReducer = (action: Action) => {
+//     switch(action.type) {
+//         case 'add':
+//             let user: User = action.payload;
+//             break;
+//         case 'delete':
+//             let id:number = action.payload;
+//             break;
+//         default:
+//             break;
+//     }
+// }
+
+// interface Bird{
+//     swing: number
+// }
+
+// interface Dog{
+//     leg: number
+// }
+
+// function getNumber(x:Bird | Dog){
+//     if("swing" in x) {
+//         return x.swing;
+//     }
+//     return x.leg;
+// }
+
+
+// interface Bird{
+//     swing: number;
+// }
+
+// interface Dog{
+//     leg: number
+// }
+
+// function isBird(x: Bird|Dog): x is Bird {
+//     return (<Bird>x).swing === 2;
+// }
+
+// function getAnimal(x:Bird | Dog){
+//     if(isBird(x)) {
+//         return x.swing;
+//     }
+//     return x.leg;
+// }
+
+// console.log(getAnimal({swing: 2})); 
+
+// 
+// const value: unknown = "hello";
+// const some: string = value as string
+
+
+interface A {
+    name: string,
+    age: number
+}
+type getType<T> = {
+    [p in keyof T]:number
+}
+type t = getType<A>;
