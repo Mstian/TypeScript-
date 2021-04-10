@@ -597,11 +597,223 @@
 // const some: string = value as string
 
 
-interface A {
-    name: string,
-    age: number
+// interface A {
+//     name: string,
+//     age: number
+// }
+// type getType<T> = {
+//     [p in keyof T]:number
+// }
+// type t = getType<A>;
+
+// 类型推断
+// let num = 1; // number
+// let str = "1"; // string
+
+
+// 
+// type Sum = (a: number, b: number) => number;
+
+// let sum: Sum = (a, b) => {
+//     return a + b;
+// }
+
+// 交叉类型
+
+// interface Bird{
+//     name: string,
+//     fly(): void
+// }
+
+// interface Person{
+//     name: string,
+//     talk(): void
+// }
+
+// type BirdPerson = Bird & Person;
+// let p: BirdPerson = {name: 'bp', fly: () => {}, talk: () => {}}
+
+
+// interface Foo {
+//     foo: string;
+//     name: string;
+//   }
+   
+//   interface Bar {
+//     bar: string;
+//     name: string;
+//   }
+
+//   type Union = Foo & Bar;
+
+//   let u:Union = {name: 's', foo: '', bar: ''}
+//   const sayHello = (obj: Foo | Bar) => { 
+//         obj.name;
+//   };
+   
+//   sayHello({ foo: "foo", name: "lolo" , bar: 'ss'});
+//   sayHello({ bar: "bar", name: "growth" });
+// interface Bird{
+//     name: string;
+//     foots: number
+// }
+// interface Man{
+//     name: string;
+//     arms: number
+// }
+// let birdManCross: Bird & Man = {name: 'birdman', foots: 2, arms: 2};
+
+// let birdManUnion: Bird | Man = {name: 'birdman', foots: 2, arms: 2};
+
+
+
+// interface X {
+//     a: string | number;
+//     b: string;
+// }
+
+// interface Y {
+//     a: number;
+//     c: string
+// }
+
+// type XY = X & Y;
+// type YX = Y & X;
+
+// let aa:XY = {a: 1, b:'', c: ''};
+// let bb:YX;
+
+
+// type T = string | number;
+// type U = number | boolean;
+// type D = T & U;
+
+
+// interface AnyObject{
+//     [props: string]: any
+// }
+
+// function mixin<T extends AnyObject, U extends AnyObject>(o: T, n: U){
+//     const result = <T & U>{};
+//     for(let key in o) {
+//         (result as T)[key] = o[key];
+//     }
+//     for(let key in n) {
+//         (<U>result)[key] = n[key];
+//     }
+//     return result;
+// }
+
+// const x = mixin({name: 'zt'}, {age: 12});
+// x.name;
+// x.age;
+// console.log(x);
+
+// let p1 = {
+//     name: 'lisa',
+//     age: 18,
+//     gender: 'male'
+// }
+// type People = typeof p1;
+// function getName(p: People) {
+//     return p.name;
+// }
+
+// console.log(getName(p1));
+
+// 索引访问
+
+// interface Perosn{
+//     name: string;
+//     age: number;
+//     job: {
+//         name: string
+//     }
+// }
+
+// let frontEndJob:Perosn['job'] = {
+//     name: '前端开发'
+// }
+
+
+// keyof
+// interface Person{
+//     name: string;
+//     age: number;
+//     gender: 'male' | 'female'
+// }
+
+// type PersonKey = keyof Person;
+// function getValueByKey(p: Person, key: PersonKey) {
+//     return p[key];
+// }
+// let val = getValueByKey({name:'leilei', age: 18, gender: 'female'}, 'name');
+// console.log(val);
+
+// interface Perosn{
+//     name: string;
+//     age: number;
+// }
+
+// type partPersonKey = {
+//     [key in keyof Perosn]?: Perosn[key];
+// }
+
+// let p: partPersonKey = {};
+
+
+// type Part<T> = {
+//     [key in keyof T]?:T[key];
+// }
+// let p2:Part<Perosn> = {};
+
+// function pick<T, K extends keyof T>(o: T, names: K[]): T[K][]{
+//     return names.map((n) => o[n])
+// }
+
+// let user = {id: 1, name: 'lucy'};
+
+// type User = typeof user;
+// const res = pick<User, keyof User>(user, ['id', 'name']);
+// console.log(res);
+
+// // T[K][] 意为K类型的数组，而且需要满足，K为T的key
+// 
+// interface Fish{
+//     name1: string
+// }
+
+// interface Water{
+//     name2: string
+// }
+
+// interface Sky{
+//     name3: string
+// }
+
+// type Condition<T> = T extends Fish ? Water : Sky;
+// let condition1: Condition<Fish | Water> = {name3: ''}
+// let condition2: Condition<Fish | Water> = {name2: ''}
+
+
+// diff
+// type Diff<T, U> = T extends U ? never : T;
+// type R = Diff <'a' | 'b' | 'c', 'a' | 'b'>
+
+// // filter
+// type Filter<T, U> = T extends U ? T : never;
+// type R1 = Filter<string | number | boolean, number>;
+
+interface Person{
+    name: string;
+    age: number;
+    gender: number
 }
-type getType<T> = {
-    [p in keyof T]:number
+
+interface FilterPerson{
+    gender: number
 }
-type t = getType<A>;
+type Filter<T, U> = T extends U ;
+
+type Person2 = Filter<Person,FilterPerson>;
+let a: Person2 = {name: '', age: 2};

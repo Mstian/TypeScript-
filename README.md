@@ -1108,6 +1108,206 @@ type getType<T> = {
 type t = getType<unknown>;
 
 ```
+27. 类型推断 
+
+```typescript
+// 1. 从左到右 变量的类型可以由定义判断
+let num = 1; // type: number
+let str = "1"; // type: string
+// num = str 报错
+
+// 2. 底部流出 返回类型能被return语句推断
+function add(a: number, b:number) {
+    return a + b;
+}
+let c = add(1, 3); // type: number
+
+// 3. 从左到右 函数参数类型/返回值也能通过赋值推断
+type Sum = (a:number, b:number) => number; // sum类型为number 参数a和b也都是number
+let sum: Sum = (a ,b) => {
+    return a + b;
+}
+
+// 4. 结构化 推断规则也适用于结构化存在（对象字面量）
+const animal = {
+    name: 'bird',
+    foots: 2
+}
+let name = animal.name; // type: string
+let foots = animal.foots; // type: number
+// 同样适用于解构 eg: const {name, foots} = animal;
+```
+
+28. 交叉类型
+
+不好理解，结合联合类型一起理解可参考本文[读懂 TS 中联合类型和交叉类型的含义](https://blog.csdn.net/azl397985856/article/details/106394200/);
+
+```typescript
+interface Bird{
+    name: string;
+    foots: number
+}
+interface Man{
+    name: string;
+    arms: number
+}
+let birdManCross: Bird & Man = {name: 'birdman', foots: 2, arms: 2};
+// birdManCross 可访问 name foots arms 三个属性
+let birdManUnion: Bird | Man = {name: 'birdman', foots: 2, arms: 2};
+// birdManUnion 只可访问 name 属性
+```
+
+29. 联合类型的交叉类型
+
+```typescript
+type T = string | number;
+type U = number | boolean;
+type D = T & U; // type: number
+
+// eg: mixin方法
+interface AnyObject{
+    [props: string]: any
+}
+
+function mixin<T extends AnyObject, U extends AnyObject>(o: T, n: U){
+    const result = <T & U>{};
+    for(let key in o) {
+        (result as T)[key] = o[key];
+    }
+    for(let key in n) {
+        (<U>result)[key] = n[key];
+    }
+    return result;
+}
+
+const x = mixin({name: 'zt'}, {age: 12});
+x.name;
+x.age;
+console.log(x);
+```
+
+30. typeof 可以获取一个变量的类型
+
+```typescript
+// 先类型 后变量
+type People = {
+    name: string;
+    age: number;
+    gender: string
+}
+let p:People = {
+    name: 'lucy',
+    age: 18,
+    gender: 'female'
+}
+
+// 先变量 后类型
+let p1 = {
+    name: 'lisa',
+    age: 18,
+    gender: 'male'
+}
+type People = typeof p1;
+function getName(p: People) {
+    return p.name;
+}
+
+getName(p1);
+
+```
+
+31. keyof 索引类型查询操作符
+
+```typescript
+interface Person{
+    name: string;
+    age: number;
+    gender: 'male' | 'female'
+}
+
+type PersonKey = keyof Person;
+function getValueByKey(p: Person, key: PersonKey) {
+    return p[key];
+}
+let val = getValueByKey({name:'leilei', age: 18, gender: 'female'}, 'name');
+console.log(val);
+```
+
+32. 映射类型
+
+```typescript
+// 1. 在定义的时候用in操作符去批量定义类型中的属性
+interface Perosn{
+    name: string;
+    age: number;
+}
+
+type partPersonKey = {
+    [key in keyof Perosn]?: Perosn[key];
+}
+let p: partPersonKey = {};
+
+type Part<T> = {
+    [key in keyof T]?:T[key];
+}
+let p2:Part<Perosn> = {};
+
+// 2. 通过key的数组获取值得数组
+function pick<T, K extends keyof T>(o: T, names: K[]): T[K][]{
+    return names.map((n) => o[n])
+}
+
+let user = {id: 1, name: 'lucy'};
+
+type User = typeof user;
+const res = pick<User, keyof User>(user, ['id', 'name']);
+console.log(res);
+// T[K][] 意为K类型的数组，而且需要满足，K为T的key
+```
+
+33. 条件类型
+
+```typescript
+// 定义条件类型
+interface Fish{
+    name1: string
+}
+interface Water{
+    name2: string
+}
+interface Sky{
+    name3: string
+}
+type Condition<T> = T extends Fish ? Water : Sky; 
+let condition: Condition<Fish> = {name2: ''}
+
+// 条件类型的分发
+interface Fish{
+    name1: string
+}
+interface Water{
+    name2: string
+}
+interface Sky{
+    name3: string
+}
+type Condition<T> = T extends Fish ? Water : Sky;
+let condition1: Condition<Fish | Water> = {name3: ''}
+let condition2: Condition<Fish | Water> = {name2: ''}
+```
+
+34. 类型Diff和类型过滤
+
+```typescript
+// diff
+type Diff<T, U> = T extends U ? never : T;
+type R = Diff <'a' | 'b' | 'c', 'a' | 'b'>
+
+// filter
+type Filter<T, U> = T extends U ? T : never;
+type R1 = Filter<string | number | boolean, number>;
+```
+
 
 
 
@@ -1122,6 +1322,8 @@ type t = getType<unknown>;
 
 
 > [了不起的 tsconfig.json 指南](https://zhuanlan.zhihu.com/p/145210784)
+>
+> [重学TypeScript系列教程（阿宝哥）](https://mp.weixin.qq.com/s/y6C4R04mpvBmyV80p5WOug)
 
 
 未完待续。。。
