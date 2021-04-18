@@ -1308,7 +1308,74 @@ type Filter<T, U> = T extends U ? T : never;
 type R1 = Filter<string | number | boolean, number>;
 ```
 
+35. 内置条件类型
 
+```typescript
+// 1. Exclude 从T可分配给的类型中排除U
+type Exclude<T, U> = T extends U ? never : T;
+type E = Exclude<string | number, number>; // string
+// 2. Extract 从T可分配给的类型中提取U
+type Extract<T, U> = T extends U ? T : never;
+type Ex = Extract<string|number, number>; // number
+// 3. NonNullable 从T中排除null和undefined
+type NonNullable<T> = T extends null | undefined ? never : T;
+type None = NonNullable<string | number | null | undefined>; // string | number
+// 4. ReturnType 获取函数类型的返回类型 infer最早出现在pr中，表示extends条件语句中待推断的类型变量
+type ReturnType<T extends (...args: any[]) => any> = T extends (...args: any[]) => infer R ? R : any;
+function getUserInfo() {
+    return {
+        name: 'lucy',
+        age: 19
+    };
+}
+type UserInfo = ReturnType<typeof getUserInfo>;
+const user: UserInfo = {
+    name: 'lili',
+    age: 20
+}
+
+// 5. Parameters 获取函数的参数类型
+type Parameters <T extends (...args: any[]) => any> = T extends (...args: infer R) => any ? R : any;
+type T0 = Parameters<() => string>;
+type T1 = Parameters<(s:string) => void>;
+type T2 = Parameters<(<T>(arg: T) => T)>;
+
+// 6. InstanceType 获取构造函数类型的实例类型
+type Constructor = new (...args: any[]) => any;
+type ConstructorParameters<T extends Constructor> = T extends new (...args: infer P) => any ? P : never;
+type InstanceType<T extends Constructor> = T extends new (...args: any[]) => infer R ? R : any;
+class Person{
+    name: string;
+    constructor(name: string) {
+        this.name = name;
+    }
+    getName() {
+        console.log(this.name);
+    }
+}
+type Param = ConstructorParameters<typeof Person>;
+let p: Param = ['n'];
+type Instance = InstanceType<typeof Person>;
+let insp: Instance = {
+    name: '',
+    getName: () => {
+
+    }
+}
+// 7. infer + 分布式
+// tuple 转union
+type ElementOf<T> = T extends Array<infer E> ? E : never;
+
+type TTuple = [string, number];
+type ToUnion = ElementOf<TTuple>;
+
+// 交叉类型
+type S1 = {name: string};
+type S2 = {age: number};
+
+type UnionToIntersection<T> = T extends {a: (x: infer U) => void; b: (x: infer U) => void} ? U : never;
+type Intersection = UnionToIntersection<{a: (x:S1) => void; b:(x: S2) => void}>;
+```
 
 
 
